@@ -432,8 +432,14 @@ best_fit_free_pages(struct Page *base, size_t n) {
 
 ## <center>本实验中重要的知识点，以及与对应的OS原理中的知识点
 
-略
+- 页表的建立与使用，物理内存管理与探测
+- 页面分配算法first-fit best-fit
+- 物理地址与虚拟地址
+- sv39多级页表管理机制
 
 ## <center>OS原理中很重要，但在实验中没有对应上的知识点
 
-略
+- worst-fit next-fit
+- 内存覆盖、紧凑，页面置换算法
+- 进程间交换数据
+- 共享内存
