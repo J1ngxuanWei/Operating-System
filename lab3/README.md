@@ -8,10 +8,6 @@
 
 源码仓库：[Github](https://github.com/J1ngxuanWei/Operating-System/tree/main/lab3)
 
-## <center>练习
-
-[lab3%20实验报告.md](https://github.com/AngelKitty/review_the_national_post-graduate_entrance_examination/blob/master/books_and_notes/professional_courses/operating_system/sources/ucore_os_lab/docs/lab_report/lab3/lab3%20实验报告.md)
-
 ### <center>练习1：理解基于FIFO的页面替换算法（思考题）
 
 > **此练习依托于完成练习3的代码。**
