@@ -173,7 +173,7 @@ bad_fork_cleanup_proc:
 ```c
 tf->gpr.sp=USTACKTOP;
 tf->epc=elf->e_entry;
-tf->status=sstatus;
+tf->status==sstatus&(~(SSTATUS_SPP|SSTATUS_SPIE));;
 ```
 
 > 请在实验报告中描述当创建一个用户态进程并加载了应用程序后，CPU 是如何让这个应用程序最终在用户态执行起来的。即这个用户态进程被 ucore 选择占用 CPU 执行（RUNNING 态）到具体执行应用程序第一条指令的整个经过。
