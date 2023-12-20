@@ -23,6 +23,7 @@ stdout_close(struct device *dev) {
 
 static int
 stdout_io(struct device *dev, struct iobuf *iob, bool write) {
+        //对应struct device 的d_io()
     if (write) {
         char *data = iob->io_base;
         for (; iob->io_resid != 0; iob->io_resid --) {
@@ -30,7 +31,8 @@ stdout_io(struct device *dev, struct iobuf *iob, bool write) {
         }
         return 0;
     }
-    return -E_INVAL;
+        //if !write:
+    return -E_INVAL;//对stdout执行读操作会报错
 }
 
 static int

@@ -46,20 +46,18 @@ struct sfs_super {
 
 /* inode (on disk) */
 struct sfs_disk_inode {
-    uint32_t size;                                  /* size of the file (in bytes) */
-    uint16_t type;                                  /* one of SYS_TYPE_* above */
-    uint16_t nlinks;                                /* # of hard links to this file */
-    uint32_t blocks;                                /* # of blocks */
-    uint32_t direct[SFS_NDIRECT];                   /* direct blocks */
-    uint32_t indirect;                              /* indirect blocks */
-//    uint32_t db_indirect;                           /* double indirect blocks */
-//   unused
+    uint32_t size;                              //如果inode表示常规文件，则size是文件大小
+    uint16_t type;                              //inode的文件类型
+    uint16_t nlinks;                            //此inode的硬链接数
+    uint32_t blocks;                            //此inode的数据块数的个数
+    uint32_t direct[SFS_NDIRECT];               //此inode的直接数据块索引值（有SFS_NDIRECT个）
+    uint32_t indirect;                          //此inode的一级间接数据块索引值
 };
 
 /* file entry (on disk) */
 struct sfs_disk_entry {
-    uint32_t ino;                                   /* inode number */
-    char name[SFS_MAX_FNAME_LEN + 1];               /* file name */
+    uint32_t ino;  //索引节点所占数据块索引值                                   /* inode number */
+    char name[SFS_MAX_FNAME_LEN + 1]; //文件名              /* file name */
 };
 
 #define sfs_dentry_size                             \

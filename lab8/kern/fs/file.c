@@ -156,7 +156,7 @@ file_testfd(int fd, bool readable, bool writable) {
 int
 file_open(char *path, uint32_t open_flags) {
     bool readable = 0, writable = 0;
-    switch (open_flags & O_ACCMODE) {
+    switch (open_flags & O_ACCMODE) {//解析 open_flags
     case O_RDONLY: readable = 1; break;
     case O_WRONLY: writable = 1; break;
     case O_RDWR:
@@ -167,12 +167,12 @@ file_open(char *path, uint32_t open_flags) {
     }
     int ret;
     struct file *file;
-    if ((ret = fd_array_alloc(NO_FD, &file)) != 0) {
+    if ((ret = fd_array_alloc(NO_FD, &file)) != 0) {//在当前进程分配file descriptor
         return ret;
     }
     struct inode *node;
-    if ((ret = vfs_open(path, open_flags, &node)) != 0) {
-        fd_array_free(file);
+    if ((ret = vfs_open(path, open_flags, &node)) != 0) {//打开文件的工作在vfs_open完成
+        fd_array_free(file); //打开失败，释放file descriptor
         return ret;
     }
     file->pos = 0;
@@ -183,12 +183,12 @@ file_open(char *path, uint32_t open_flags) {
             fd_array_free(file);
             return ret;
         }
-        file->pos = stat->st_size;
+        file->pos = stat->st_size;//追加写模式，设置当前位置为文件尾
     }
     file->node = node;
     file->readable = readable;
     file->writable = writable;
-    fd_array_open(file);
+    fd_array_open(file);//设置该文件的状态为“打开”
     return file->fd;
 }
 

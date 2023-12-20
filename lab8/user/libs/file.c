@@ -5,7 +5,7 @@
 #include <stat.h>
 #include <error.h>
 #include <unistd.h>
-
+//这是用户态程序可以使用的“系统库函数”，从文件fd读取len个字节到base这个位置。
 int
 open(const char *path, uint32_t open_flags) {
     return sys_open(path, open_flags);
@@ -18,6 +18,7 @@ close(int fd) {
 
 int
 read(int fd, void *base, size_t len) {
+    //当fd = 0的时候，表示从stdin读取
     return sys_read(fd, base, len);
 }
 

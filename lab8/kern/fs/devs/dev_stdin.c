@@ -15,21 +15,22 @@
 #define STDIN_BUFSIZE               4096
 
 static char stdin_buffer[STDIN_BUFSIZE];
+//这里又有一个stdin设备的缓冲区, 能否和之前console的缓冲区合并?
 static off_t p_rpos, p_wpos;
 static wait_queue_t __wait_queue, *wait_queue = &__wait_queue;
 
 void
-dev_stdin_write(char c) {
+dev_stdin_write(char c) {//把其他地方的字符写到stdin缓冲区, 准备被读取
     bool intr_flag;
     if (c != '\0') {
-        local_intr_save(intr_flag);
+        local_intr_save(intr_flag);//禁用中断
         {
             stdin_buffer[p_wpos % STDIN_BUFSIZE] = c;
             if (p_wpos - p_rpos < STDIN_BUFSIZE) {
                 p_wpos ++;
             }
             if (!wait_queue_empty(wait_queue)) {
-                wakeup_queue(wait_queue, WT_KBD, 1);
+                wakeup_queue(wait_queue, WT_KBD, 1); //若当前有进程在等待字符输入, 则进行唤醒
             }
         }
         local_intr_restore(intr_flag);
@@ -37,17 +38,18 @@ dev_stdin_write(char c) {
 }
 
 static int
-dev_stdin_read(char *buf, size_t len) {
+dev_stdin_read(char *buf, size_t len) {//读取len个字符
     int ret = 0;
     bool intr_flag;
     local_intr_save(intr_flag);
     {
         for (; ret < len; ret ++, p_rpos ++) {
         try_again:
-            if (p_rpos < p_wpos) {
+            if (p_rpos < p_wpos) {//当前队列非空
                 *buf ++ = stdin_buffer[p_rpos % STDIN_BUFSIZE];
             }
             else {
+                  //希望读取字符, 但是当前没有字符, 那么进行等待
                 wait_t __wait, *wait = &__wait;
                 wait_current_set(wait_queue, wait, WT_KBD);
                 local_intr_restore(intr_flag);
@@ -57,7 +59,7 @@ dev_stdin_read(char *buf, size_t len) {
                 local_intr_save(intr_flag);
                 wait_current_del(wait_queue, wait);
                 if (wait->wakeup_flags == WT_KBD) {
-                    goto try_again;
+                    goto try_again;//再次尝试
                 }
                 break;
             }
@@ -82,6 +84,7 @@ stdin_close(struct device *dev) {
 
 static int
 stdin_io(struct device *dev, struct iobuf *iob, bool write) {
+        //对应struct device 的d_io()
     if (!write) {
         int ret;
         if ((ret = dev_stdin_read(iob->io_base, iob->io_resid)) > 0) {

@@ -21,10 +21,10 @@ typedef struct {
 } vfs_dev_t;
 
 #define le2vdev(le, member)                         \
-    to_struct((le), vfs_dev_t, member)
+    to_struct((le), vfs_dev_t, member)//为了使用链表定义的宏, 做到现在应该对它很熟悉了
 
 static list_entry_t vdev_list;     // device info list in vfs layer
-static semaphore_t vdev_list_sem;
+static semaphore_t vdev_list_sem;// 互斥访问的semaphore
 
 static void
 lock_vdev_list(void) {

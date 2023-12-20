@@ -8,7 +8,7 @@
 static struct {
     uint8_t buf[CONSBUFSIZE];
     uint32_t rpos;
-    uint32_t wpos;
+    uint32_t wpos;//控制台的输入缓冲区是一个队列
 } cons;
 
 /* *
